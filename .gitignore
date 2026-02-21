@@ -1,0 +1,25 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!common.tfvars
+!*.example.tfvars
+.terraform.lock.hcl
+
+# Terragrunt
+.terragrunt-cache/
+**/backend.tf
+**/provider.tf
+**/common_vars.tf
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

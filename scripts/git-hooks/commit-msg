@@ -1,0 +1,24 @@
+#!/bin/bash
+# Commit message hook
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+PATTERN="^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?: .{1,100}"
+
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+    echo "ERROR: Invalid commit message format"
+    echo ""
+    echo "Format: <type>(<scope>): <subject>"
+    echo ""
+    echo "Types: feat, fix, docs, style, refactor, perf, test, chore, ci, build"
+    echo ""
+    echo "Examples:"
+    echo "  feat(vpc): add multi-az support"
+    echo "  fix(eks): resolve scaling issue"
+    echo ""
+    exit 1
+fi
+
+echo "Commit message OK"
+exit 0

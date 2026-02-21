@@ -1,0 +1,96 @@
+# Pre-commit framework configuration
+# Install: pip install pre-commit
+# Setup: pre-commit install
+
+repos:
+  # Terraform hooks
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.5
+    hooks:
+      - id: terraform_fmt
+        name: Terraform format
+        description: Rewrites all Terraform files to canonical format
+        
+      - id: terraform_validate
+        name: Terraform validate
+        description: Validates all Terraform files
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
+          
+      - id: terraform_docs
+        name: Terraform docs
+        description: Generate Terraform documentation
+        args:
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+          
+      - id: terraform_tflint
+        name: Terraform lint
+        description: Validates Terraform with tflint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+          
+      - id: terraform_tfsec
+        name: Terraform security scan
+        description: Static analysis security scanner
+        args:
+          - --args=--minimum-severity=MEDIUM
+
+  # Terragrunt hooks
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.83.5
+    hooks:
+      - id: terragrunt_fmt
+        name: Terragrunt format
+        description: Rewrites all Terragrunt files to canonical format
+        
+      - id: terragrunt_validate
+        name: Terragrunt validate
+        description: Validates all Terragrunt files
+
+  # General hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+        
+      - id: end-of-file-fixer
+        name: Fix end of files
+        
+      - id: check-yaml
+        name: Check YAML syntax
+        
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1024']
+        
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+        
+      - id: detect-private-key
+        name: Detect private keys
+        
+      - id: check-case-conflict
+        name: Check for case conflicts
+
+  # Commit message validation
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.0.0
+    hooks:
+      - id: conventional-pre-commit
+        name: Conventional commits
+        stages: [commit-msg]
+        args:
+          - feat
+          - fix
+          - docs
+          - style
+          - refactor
+          - perf
+          - test
+          - chore
+          - ci
+          - build
+          - revert

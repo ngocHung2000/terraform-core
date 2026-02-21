@@ -1,0 +1,1 @@
+# Terragunt common settings

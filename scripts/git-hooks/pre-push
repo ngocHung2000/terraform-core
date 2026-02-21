@@ -1,0 +1,25 @@
+#!/bin/bash
+# Pre-push hook
+
+echo "Running pre-push checks..."
+
+# Check protected branches
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+PROTECTED=("main" "master" "production")
+
+if [[ " ${PROTECTED[@]} " =~ " ${CURRENT_BRANCH} " ]]; then
+    echo "ERROR: Direct push to $CURRENT_BRANCH not allowed"
+    echo "Please create a pull request"
+    exit 1
+fi
+
+# Check for large files
+LARGE_FILES=$(git diff --cached --name-only | xargs -I {} du -k {} 2>/dev/null | awk '$1 > 1024' || true)
+if [ -n "$LARGE_FILES" ]; then
+    echo "ERROR: Large files detected (>1MB)"
+    echo "$LARGE_FILES"
+    exit 1
+fi
+
+echo "Pre-push checks passed!"
+exit 0
